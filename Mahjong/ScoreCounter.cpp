@@ -11,7 +11,7 @@ else {if (自摸) {score1=score_子自摸_亲; score2=score_子自摸_子;} else
 
 static vector<pair<vector<Yaku>, int>> get_手役_from_complete_tiles(CompletedTiles ct, vector<Fulu> fulus, Tile* correspond_tile, BaseTile tsumo_tile, Wind 自风, Wind 场风);
 
-int calculate_fan(vector<Yaku> yakus);
+std::pair<int, int> calculate_fan(vector<Yaku> yakus);
 
 CounterResult yaku_counter(Table *table, int turn, Tile *correspond_tile, bool 抢杠, bool 抢暗杠, Wind 自风, Wind 场风)
 {
@@ -245,8 +245,10 @@ CounterResult yaku_counter(Table *table, int turn, Tile *correspond_tile, bool �
 	//对于AllYakusAndFu，判定番最高的，番相同的，判定符最高的
 	
 	auto iter = max_element(AllYakusAndFu.begin(), AllYakusAndFu.end(), [](pair<vector<Yaku>, int> yaku_fu1, pair<vector<Yaku>, int> yaku_fu2) {
-		auto fan1 = calculate_fan(yaku_fu1.first);
-		auto fan2 = calculate_fan(yaku_fu2.first);
+		auto ret1 = calculate_fan(yaku_fu1.first);
+		auto ret2 = calculate_fan(yaku_fu2.first);
+        auto fan1 = ret1.first + ret1.second * 13;
+        auto fan2 = ret2.first + ret2.second * 13;
 		if (fan1 >= 13 || fan2 >= 13) return fan1 < fan2;		
 		return (1ull << fan1) * yaku_fu1.second < (1ull << fan2) * yaku_fu2.second;
 	});
@@ -261,8 +263,10 @@ CounterResult yaku_counter(Table *table, int turn, Tile *correspond_tile, bool �
 	}
 	else {
 		final_result.yakus.assign(iter->first.begin(), iter->first.end());
-		final_result.fan = calculate_fan(final_result.yakus);
+        const auto fan_ret = calculate_fan(final_result.yakus);
+		final_result.fan = fan_ret.first;
 		final_result.fu = iter->second;
+        final_result.yakuman = fan_ret.second;
 		bool 亲家 = false;
 		if (table->庄家 == turn) 亲家 = true;
 
@@ -273,27 +277,27 @@ CounterResult yaku_counter(Table *table, int turn, Tile *correspond_tile, bool �
 
 void CounterResult::calculate_score(bool 亲, bool 自摸)
 {
-	if (fan == 6 * 13) {
+	if (yakuman == 6) {
 		// 6倍 役满
 		REGISTER_SCORE(亲, 自摸, 48000 * 6, 16000 * 6, 32000 * 6, 16000 * 6, 8000 * 6);
 	}
-	else if (fan == 5 * 13) {
+	else if (yakuman == 5) {
 		// 5倍 役满
 		REGISTER_SCORE(亲, 自摸, 48000 * 5, 16000 * 5, 32000 * 5, 16000 * 5, 8000 * 5);
 	}
-	else if (fan == 4 * 13) {
+	else if (yakuman == 4) {
 		// 4倍 役满		
 		REGISTER_SCORE(亲, 自摸, 48000 * 4, 16000 * 4, 32000 * 4, 16000 * 4, 8000 * 4);
 	}
-	else if (fan == 3 * 13) {
+	else if (yakuman == 3) {
 		// 3倍 役满
 		REGISTER_SCORE(亲, 自摸, 48000 * 3, 16000 * 3, 32000 * 3, 16000 * 3, 8000 * 3);
 	}
-	else if (fan == 2 * 13) {
+	else if (yakuman == 2) {
 		// 2倍 役满
 		REGISTER_SCORE(亲, 自摸, 48000 * 2, 16000 * 2, 32000 * 2, 16000 * 2, 8000 * 2);
 	}
-	else if (fan >= 13) {
+	else if (yakuman == 1 || fan >= 13) {
 		// 役满
 		REGISTER_SCORE(亲, 自摸, 48000, 16000, 32000, 16000, 8000);
 	}
@@ -1131,7 +1135,7 @@ vector<pair<vector<Yaku>, int>> get_手役_from_complete_tiles(CompletedTiles ct
 	return yaku_fus;
 }
 
-int calculate_fan(vector<Yaku> yakus)
+std::pair<int, int> calculate_fan(vector<Yaku> yakus)
 {
 	bool 役满 = false;
 	for (auto yaku : yakus) {
@@ -1141,13 +1145,18 @@ int calculate_fan(vector<Yaku> yakus)
 		}
 	}
 	int fan = 0;
+    int yakuman = 0;
 	if (役满) {
 		for (auto yaku : yakus) {
-			if (yaku < Yaku::满贯) continue; // 跳过所有不是役满的
-			if (yaku > Yaku::满贯 && yaku < Yaku::役满) fan += 13;
-			if (yaku > Yaku::役满 && yaku < Yaku::双倍役满) fan += 26;
+			if (yaku < Yaku::满贯) {
+                continue; // 跳过所有不是役满的
+            } else if (yaku > Yaku::满贯 && yaku < Yaku::役满) {
+                yakuman += 1;
+            } else if (yaku > Yaku::役满 && yaku < Yaku::双倍役满) {
+                yakuman += 2;
+            }
 		}
-		return fan;
+		return std::make_pair(fan, yakuman);
 	}
 	else {
 		for (auto yaku : yakus) {
@@ -1157,11 +1166,7 @@ int calculate_fan(vector<Yaku> yakus)
 			if (yaku > Yaku::三番 && yaku < Yaku::五番) fan += 5;
 			if (yaku > Yaku::五番 && yaku < Yaku::六番) fan += 6;
 		}
-		if (fan >= 13) {
-			// 累计役满
-			fan = 13;
-		}
-		return fan;
+		return std::make_pair(fan, yakuman);
 	}
 
 }

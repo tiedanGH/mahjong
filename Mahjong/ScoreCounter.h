@@ -18,6 +18,7 @@ struct CounterResult {
 	
 	int fan;
 	int fu;
+    int yakuman;
 };
 
 class Table;
