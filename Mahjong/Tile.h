@@ -236,12 +236,17 @@ class Tile {
 public:
 	BaseTile tile;
 	bool red_dora;
+    bool toumei;
 
 	inline std::string to_simple_string() const {
 		std::stringstream ss;
 		int number = tile % 9 + 1;
-		if (red_dora)
+		if (red_dora) {
 			number = 0;
+        }
+        if (toumei) {
+            ss << "t";
+        }
 		switch (tile / 9) {
 		case 0:
 			ss << number << "m";
