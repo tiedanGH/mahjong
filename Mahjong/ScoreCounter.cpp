@@ -472,8 +472,7 @@ static inline bool 纯绿牌(string s) {
 }
 
 static inline bool 幺九刻子(string s) {
-	if (s[2] == 'K' || s[2] == '|') return s[0] == '1' || s[0] == '9';
-	if (s[1] == 'z') return true;
+	if (s[2] == 'K' || s[2] == '|') return s[0] == '1' || s[0] == '9' || s[1] == 'z';
 	return false;
 }
 
