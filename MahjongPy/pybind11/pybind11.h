@@ -40,6 +40,7 @@
 #  endif
 #endif
 
+#include <cstdint>
 #include "attr.h"
 #include "options.h"
 #include "detail/class.h"
