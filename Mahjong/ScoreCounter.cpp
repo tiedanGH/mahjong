@@ -866,17 +866,19 @@ pair<vector<Yaku>, int> get_手役_from_complete_tiles_固定位置(
 		"1pS", "2pS" ,"3pS" ,"4pS" ,"5pS" ,"6pS" ,"7pS",
 		"1mS", "2mS" ,"3mS" ,"4mS" ,"5mS" ,"6mS" ,"7mS"	
 	};
-	// 判断二杯口 && 一杯口
-	int n杯口 = 0;
-	for (auto tiles : 顺子牌型)
-		if (count_if(tile_group_string_no_4.begin(), tile_group_string_no_4.end(), [&tiles](string s) {
-			return s == tiles;
-		}) >= 2) {
-			n杯口++;
-		}
+    if (门清) {
+        // 判断二杯口 && 一杯口
+        int n杯口 = 0;
+        for (auto tiles : 顺子牌型)
+            if (count_if(tile_group_string_no_4.begin(), tile_group_string_no_4.end(), [&tiles](string s) {
+                return s == tiles;
+            }) >= 2) {
+                n杯口++;
+            }
 
-	if (n杯口 == 2) yakus.push_back(Yaku::二杯口);
-	else if (n杯口 == 1) yakus.push_back(Yaku::一杯口);
+        if (n杯口 == 2) yakus.push_back(Yaku::二杯口);
+        else if (n杯口 == 1) yakus.push_back(Yaku::一杯口);
+    }
 
 	// 计算符数
 
