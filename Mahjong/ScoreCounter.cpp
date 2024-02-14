@@ -606,7 +606,7 @@ pair<vector<Yaku>, int> get_手役_from_complete_tiles_固定位置(
 	bool 字牌对子[7] = { false };
 	for_each(tile_group_string.begin(), tile_group_string.end(), [&字牌刻子, &字牌对子](string s) {
 		if (s[1] == 'z') {
-			if (s[2] == 'K') {
+			if (s[2] == 'K' || s[2] == '|') {
 				字牌刻子[s[0] - '1'] = true;
 			}
 			if (s[2] == ':') {
