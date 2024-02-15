@@ -467,7 +467,7 @@ static inline bool 纯老头(string s) {
 
 static inline bool 纯绿牌(string s) {
 	string first3(s.begin(), s.begin() + 3);
-	return is_in({ "2sK", "3sK", "4sK", "2sS", "6sK", "8sK", "6zK", 
+	return is_in({ "2sS", "2sK", "3sK", "4sK", "6sK", "8sK", "6zK", "2s|", "3s|", "4s|", "6s|", "8s|", "6z|",
 		"2s:", "3s:", "4s:", "6s:", "8s:","6z:" }, first3);
 }
 
