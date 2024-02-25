@@ -162,8 +162,9 @@ CounterResult yaku_counter(Table *table, int turn, Tile *correspond_tile, bool �
 			vector<BaseTile> raw
 			{ _1m, _9m, _1s, _9s, _1p, _9p, east, south, west, north, 白, 发, 中 };
 
-			sort(tiles.begin(), tiles.end());
-			if (is_same_container(raw, convert_tiles_to_base_tiles(tiles)))
+			auto basetiles = convert_tiles_to_base_tiles(tiles);
+			sort(basetiles.begin(), basetiles.end());
+			if (is_same_container(raw, basetiles))
 				is_13面 = true;
 			else is_13面 = false;
 		}
