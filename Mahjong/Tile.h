@@ -67,12 +67,13 @@ inline BaseTile char2_to_basetile(char number, char color, bool& red_dora) {
 	throw std::runtime_error("Unknown Tile String");
 }
 
-inline BaseTile get_dora_next(BaseTile tile) {
+inline BaseTile get_dora_next(BaseTile tile, const bool is_three_players) {
 	if (tile == _9m) return _1m;
 	else if (tile == _9s) return _1s;
 	else if (tile == _9p) return _1p;
 	else if (tile == north) return east;
 	else if (tile == 中) return 白;
+    else if (is_three_players && tile == _1m) return _9m;
 	else return static_cast<BaseTile>((int)tile + 1);
 }
 

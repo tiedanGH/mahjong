@@ -171,13 +171,14 @@ public:
 	int 庄家 = 0; // 庄家
 	int n本场 = 0;
 	int n立直棒 = 0;
+    bool is_three_players = false;
 
 	std::string export_yama();
 
 	inline std::vector<BaseTile> get_dora() const {
 		std::vector<BaseTile> doratiles;
 		for (int i = 0; i < dora_spec; ++i) {
-			doratiles.push_back(get_dora_next(宝牌指示牌[i]->tile));
+			doratiles.push_back(get_dora_next(宝牌指示牌[i]->tile, is_three_players));
 		}
 		return doratiles;
 	}
@@ -185,7 +186,7 @@ public:
 	inline std::vector<BaseTile> get_ura_dora() const {
 		std::vector<BaseTile> doratiles;
 		for (int i = 0; i < dora_spec; ++i) {
-			doratiles.push_back(get_dora_next(里宝牌指示牌[i]->tile));
+			doratiles.push_back(get_dora_next(里宝牌指示牌[i]->tile, is_three_players));
 		}
 		return doratiles;
 	}
