@@ -769,7 +769,7 @@ pair<vector<Yaku>, int> get_手役_from_complete_tiles_固定位置(
 		if (s.size() == 3) return true;
 		if (s[3] == '@') return false;
 		if (s[3] == '%') return false;
-		if (s[2] == ':' && s[3] == '$') return false;
+		if (s[2] == ':' && (s[3] == '$' || s[3] == '!')) return false;
 		if ((s[3] == '#' || s[3] == '^') && s[0] == '1') return false;
 		if ((s[3] == '!' || s[3] == '$') && s[0] == '7') return false;
 		return true;
